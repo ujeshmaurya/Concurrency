@@ -35,9 +35,6 @@ class ProducerConsumer {
             thread.Name = $"Thread-{i + 1}";
             thread.Start();
         }
-        lock (_lock) {
-            Monitor.PulseAll(_lock);
-        }
     }
 
     /// Method executed by Producer thread.
