@@ -25,14 +25,14 @@ class ProducerConsumer {
         // Spawn Producer threads:
         for (int i = 0; i < PRODUCER_THREAD_COUNT; i++) {
             Thread thread = new Thread(() => Producer());
-            thread.Name = $"Thread: {i + 1}";
+            thread.Name = $"Thread-{i + 1}";
             thread.Start();
         }
 
         // Spawn Consumer threads:
         for (int i = 0; i < CONSUMER_THREAD_COUNT; i++) {
             Thread thread = new Thread(() => Consumer());
-            thread.Name = $"Thread: {i + 1}";
+            thread.Name = $"Thread-{i + 1}";
             thread.Start();
         }
         lock (_lock) {
@@ -45,7 +45,7 @@ class ProducerConsumer {
         for(int i = 0; i < itemsToProduce; i++) {
             // Take a lock before accessing the buffer (Queue).
             lock (_lock) {
-                _queue.Enqueue($"{Thread.CurrentThread.Name} + {i + 1}");
+                _queue.Enqueue($"{Thread.CurrentThread.Name}::{i + 1}");
                 Console.WriteLine($"{Thread.CurrentThread.Name} Produced a value {i + 1} | QueueSize: {_queue.Count()}");
 
                 // Signal/Notify all other threads to move from Wait-Queue to Ready-Queue, as we are releasing the lock.
@@ -64,7 +64,7 @@ class ProducerConsumer {
             lock (_lock) {
                 String value;
                 if (_queue.TryDequeue(out value)) {
-                    Console.WriteLine($"{Thread.CurrentThread.Name} consumed a value {value} | QueueSize: {_queue.Count()}");
+                    Console.WriteLine($"{Thread.CurrentThread.Name} consumed a value \"{value}\" | QueueSize: {_queue.Count()}");
                 }
                 else if (_queue.Count == 0) {
                     Console.WriteLine($"{Thread.CurrentThread.Name} could not consume as queue is empty. Trying again in a few moments");
